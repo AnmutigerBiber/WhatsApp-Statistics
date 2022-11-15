@@ -13,11 +13,14 @@ class Chat():
 		self.most_messages_number = None
 		self.first_day = DateClass.today()
 		self.days_where_messages_were_sent = 0
+		self.sent_bytes = 0
 	
 		self.start_parsing(input_file)
 		
 		self.calculate_day_with_most_messages()
 		self.calculate_first_day()
+		
+		self.calculate_bytes()
 		
 	def start_parsing(self, input_file):
 		for line in input_file:
@@ -56,7 +59,11 @@ class Chat():
 		
 	def append_line_to_last_message(self, line):
 		self.messages[-1] += line
-		
+	
+	def calculate_bytes(self):
+		for message in self.messages:
+			self.sent_bytes += len(message)
+	
 	def calculate_day_with_most_messages(self):
 		max_messages = 0
 		max_messages_date = None
@@ -85,7 +92,11 @@ class Chat():
 		while current_day.strftime("%d.%m.%y") != DateClass.today().strftime("%d.%m.%y"):
 			formatted = current_day.strftime("%d.%m.%y")
 
-			print(formatted + ": ", end="")
+			weekday = current_day.weekday()
+			
+			weekday = {0:"Mon ", 1:"Tue ", 2:"Wed ", 3:"Thu ", 4:"Fri ", 5:"Sat ", 6:"Sun "}[weekday]
+
+			print(weekday + formatted + ": ", end="")
 
 			# days without messages don't need a bar
 			if formatted in self.messages_per_day:
@@ -119,6 +130,7 @@ class Chat():
 	def print_overall_results(self):
 		print("\n========== General Statistics ==========")
 		print(" A total of " + str(len(self.messages)) + " messages were sent")
+		print(" This is " + str(self.sent_bytes / 1000) + "kB of data")
 		print(" On average " + str(int(len(self.messages) / self.days_where_messages_were_sent)) + " messages were sent per day (excluding message-free days)")
 		print(" The maximum number of messages in a day was " + str(self.most_messages_number) + " on " + self.day_with_most_messages)
 		print("\n Written by Leon Maier")
