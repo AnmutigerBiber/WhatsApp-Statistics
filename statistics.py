@@ -103,6 +103,9 @@ class Chat():
 				print(str(self.messages_per_day[formatted]) + "\t", end="")
 				self.days_where_messages_were_sent += 1
 				
+				if self.messages_per_day[formatted] < 10:
+					print("\t", end="")
+				
 				portion = self.messages_per_day[formatted] / self.most_messages_number * 100
 		
 				# calculate the part, which can't be representated by a full box
